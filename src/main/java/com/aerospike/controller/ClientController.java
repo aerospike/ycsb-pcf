@@ -41,21 +41,21 @@ public class ClientController {
 
 	@Autowired(required=false)
 	Map<String, IServiceConfiguration> services;
-	
+
 	@Autowired
 	Map<String, WorkloadConfig> workloads;
-	  
+
 	private WorkloadConfig workloadConfig = null;
 	private String serviceNameA;
-	
+
 	private List<String[]> results = null;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Model model) {
-        List<String> serviceNames = new ArrayList<String>();
-        
-        boolean bound = (services == null);
-        
+		List<String> serviceNames = new ArrayList<String>();
+
+		boolean bound = (services == null);
+
 		if (services != null) {
 			for (String serviceName : services.keySet()) {
 
@@ -67,18 +67,18 @@ public class ClientController {
 			}
 		}
 		if (workloadConfig == null) workloadConfig = workloads.get(workloads.keySet().toArray()[0]);
-		
-        model.addAttribute("services", serviceNames);
-        model.addAttribute("bound", bound);
-        model.addAttribute("serviceNameA", this.serviceNameA);
-        model.addAttribute("isConfig", true);
+
+		model.addAttribute("services", serviceNames);
+		model.addAttribute("bound", bound);
+		model.addAttribute("serviceNameA", this.serviceNameA);
+		model.addAttribute("isConfig", true);
 		if (!model.containsAttribute("workloadConfig")) {
 			model.addAttribute("workloadConfig", this.workloadConfig);
 		}
 		model.addAttribute("workloads", this.workloads.values());
 		return "index";
 	}
-	
+
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String runBenchmark(@Valid WorkloadConfig newConfig, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes,
@@ -98,7 +98,7 @@ public class ClientController {
 			redirectAttributes.addFlashAttribute("error", "No services available!");	
 			return "redirect:/results";
 		}
-		
+
 		try {
 			if (action.equals("load")) {
 				/* LOAD DATA FOR SERVICE */
@@ -116,7 +116,7 @@ public class ClientController {
 				String args = "-t,-p,exporter=com.aerospike.util.Exporter";
 				IServiceConfiguration csf = services.get(this.serviceNameA);
 				args += csf.getPropertyString();
-		
+
 				com.aerospike.util.Exporter.stringArrayList.clear();
 				com.yahoo.ycsb.Client.webMain(args.split(","), properties);
 				results = new ArrayList<String[]>(com.aerospike.util.Exporter.stringArrayList);
@@ -141,13 +141,13 @@ public class ClientController {
 			results.add(testResults);
 			results.add(testResults);
 		}
-		
-        model.addAttribute("serviceNameA", serviceNameA);
+
+		model.addAttribute("serviceNameA", serviceNameA);
 		model.addAttribute("hasResults", results != null);
 		model.addAttribute("results", results);
-        model.addAttribute("isConfig", false);
-        model.addAttribute("properties", this.workloadConfig.toProperties());
-		
+		model.addAttribute("isConfig", false);
+		model.addAttribute("properties", this.workloadConfig.toProperties());
+
 		return "results";
 	}
 

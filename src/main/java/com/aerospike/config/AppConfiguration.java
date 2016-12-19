@@ -36,16 +36,16 @@ import io.pivotal.labs.cfenv.CloudFoundryService;
 @Profile("cloud")
 public class AppConfiguration extends AbstractCloudConfig {
 
-    // Update this map with the label from your PCF service and the class name of your YCSB service configuration
-    private static final Map<String, String> labelToConfigurationClass = new HashMap<String, String>();
-    static {
-    	labelToConfigurationClass.put("aerospike-on-demand", "com.aerospike.config.client.AerospikeServiceConfiguration");
-    	labelToConfigurationClass.put("aerospike",           "com.aerospike.config.client.AerospikeServiceConfiguration");
-    	labelToConfigurationClass.put("p-redis",             "com.aerospike.config.client.RedisServiceConfiguration");
-    }
-    
-    private Map<String, IServiceConfiguration> services = new HashMap<String, IServiceConfiguration>();
-    
+	// Update this map with the label from your PCF service and the class name of your YCSB service configuration
+	private static final Map<String, String> labelToConfigurationClass = new HashMap<String, String>();
+	static {
+		labelToConfigurationClass.put("aerospike-on-demand", "com.aerospike.config.client.AerospikeServiceConfiguration");
+		labelToConfigurationClass.put("aerospike",           "com.aerospike.config.client.AerospikeServiceConfiguration");
+		labelToConfigurationClass.put("p-redis",             "com.aerospike.config.client.RedisServiceConfiguration");
+	}
+
+	private Map<String, IServiceConfiguration> services = new HashMap<String, IServiceConfiguration>();
+
 	public AppConfiguration() throws CloudFoundryEnvironmentException {  
 		CloudFoundryEnvironment environment = new CloudFoundryEnvironment(System::getenv);
 

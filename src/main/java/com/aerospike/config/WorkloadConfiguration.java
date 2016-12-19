@@ -32,9 +32,9 @@ import com.aerospike.util.WorkloadConfig;
 
 @Configuration
 public class WorkloadConfiguration {
-    private Map<String, WorkloadConfig> workloads = new LinkedHashMap<String, WorkloadConfig>();
-    
-    public WorkloadConfiguration() {
+	private Map<String, WorkloadConfig> workloads = new LinkedHashMap<String, WorkloadConfig>();
+
+	public WorkloadConfiguration() {
 		try {
 			InputStream in = getResourceAsStream("com/aerospike/properties");
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -59,7 +59,7 @@ public class WorkloadConfiguration {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
 	private InputStream getResourceAsStream(String resource) {
 		final InputStream in = getContextClassLoader().getResourceAsStream(resource);

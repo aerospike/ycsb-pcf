@@ -29,57 +29,57 @@ public class WorkloadConfig {
 	public enum RequestDist {
 		uniform, zipfian, hotspot
 	}
-	
+
 	public enum InsertOrder {
 		hashed, ordered
 	}
-	
+
 	public enum ScanLengthDist {
 		uniform, zipfian
 	}
-	
+
 	private String name                          = "Generic Workload";
 	private String resourcename                  = "workloada";
-	
+
 	@NotNull
 	@Min(1)
 	private Integer fieldcount                   = 10;
-	
+
 	@NotNull
 	@Min(1)
 	private Integer fieldlength                  = 100;
-	
+
 	private Boolean readallfields                = true;
 	private Boolean writeallfields               = true;
-	
+
 	@DecimalMin(value = "0.0", inclusive = true)
 	@DecimalMax(value = "1.0", inclusive = true)
 	private BigDecimal readproportion            = new BigDecimal(0.95);
-	
+
 	@DecimalMin(value = "0.0", inclusive = true)
 	@DecimalMax(value = "1.0", inclusive = true)
 	private BigDecimal updateproportion          = new BigDecimal(0.95);
-	
+
 	@DecimalMin(value = "0.0", inclusive = true)
 	@DecimalMax(value = "1.0", inclusive = true)
 	private BigDecimal insertproportion          = new BigDecimal(0.0);
-	
+
 	@DecimalMin(value = "0.0", inclusive = true)
 	@DecimalMax(value = "1.0", inclusive = true)
 	private BigDecimal scanproportion            = new BigDecimal(0.0);
-	
+
 	@DecimalMin(value = "0.0", inclusive = true)
 	@DecimalMax(value = "1.0", inclusive = true)
 	private BigDecimal readmodifywriteproportion = new BigDecimal(0.0);
-	
+
 	private RequestDist requestdistribution      = RequestDist.uniform;
-	
+
 	private Integer maxscanlength                = 1000;
 	private ScanLengthDist scanlenthdistribution = ScanLengthDist.uniform;
 	private InsertOrder insertorder              = InsertOrder.hashed;
 	private Integer operationcount               = 100000;
 	private Integer maxexecutiontime             = 600;
-	
+
 	@NotNull
 	@Min(1)
 	private Integer recordcount                  = 100000;
@@ -231,8 +231,6 @@ public class WorkloadConfig {
 		this.hotspotopnfraction = hotspotopnfraction;
 	}
 	public void setFromProperties(Properties props) {
-//		Field[] fields = WorkloadConfig.class.getDeclaredFields();
-		
 		for (String name : props.stringPropertyNames()) {
 			switch (name) {
 				case "name": this.setName(props.getProperty(name)); break;
@@ -262,7 +260,7 @@ public class WorkloadConfig {
 			}
 		}
 	}
-	
+
 	public Properties toProperties() {
 		Properties props = new Properties();
 		props.put("name", this.getName());

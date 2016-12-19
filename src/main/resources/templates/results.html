@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:dt="http://www.thymeleaf.org/dandelion/datatables">
+<head>
+    <title>YCSB For Pivotal Cloud Foundry</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      
+    <link data-require="bootstrap-css@*" data-semver="3.3.1" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+    <script data-require="angular.js@1.3.15" data-semver="1.3.15" src="https://code.angularjs.org/1.3.15/angular.js"></script>
+    <script data-require="ui-bootstrap@*" data-semver="0.13.0" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.min.js"></script>
+
+    <script th:src="@{/assets/js/script.js}"></script>
+    <script th:src="@{/assets/js/ng-table-to-csv.min.js}"></script>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/ycsb.css}" />
+</head>
+<body ng-app="ycsb-app">
+    <div class="container">
+ 
+      <div class="masthead">
+        <h3 class="text-muted">YCSB For Pivotal Cloud Foundry</h3>
+        <nav>
+          <ul class="nav nav-justified">
+            <li th:class="${isConfig}? active : inactive" class="active"><a href="/">Configure</a></li>
+            <li th:class="${isConfig}? inactive : active" class="active"><a href="/results">Results</a></li>
+          </ul>
+        </nav>
+      </div>
+      <br/>
+      <div th:if="${error}">
+         <div class="alert alert-danger alert-dismissible" role="alert">
+             <strong>Error! </strong><span th:text="${error}"></span>
+           </div>
+      </div>
+      
+      <div th:unless="${hasResults}" class="row">
+        <div class="col-lg-4">
+          <h4 class="text-muted">No Results</h4>
+         </div>
+      </div>
+
+      <div th:if="${hasResults}" data-ng-controller="ExportCtrl" class="row">
+        <div class="col-lg-6">
+          <h4 class="text-muted">Results</h4>
+		    <a class="btn" title="Export Data" ng-click="csv.generate()" ng-href="{{ csv.link() }}" download="results.csv">
+		      <i class="glyphicon glyphicon-new-window"></i> Export
+		    </a>
+	        <table dt:table="true" dt:export="csv" class="table table-striped" export-csv="csv" separator="," export-csv-ignore="ignore">
+	          <thead class="thead-default">
+	            <tr>
+	              <th>Title</th>
+	              <th>Property</th>
+	              <th>Value</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <tr th:each="result : ${results}" >
+	              <td th:text="${result[0]}" />
+	              <td th:text="${result[1]}" />
+	              <td th:text="${result[2]}" />
+	            </tr>
+	            <tr><td>** WORKLOAD CONFIG **</td></tr>
+	            <tr><td>Service Name</td><td th:text="${serviceNameA}" /></tr>
+	            <tr th:each="property : ${properties.keySet()}" >
+	              <td th:text="${property}" />
+	              <td th:text="${properties.get(property)}" />
+	            </tr>
+	          </tbody>
+	        </table>         
+        </div>
+      </div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</body>
+</html>

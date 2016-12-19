@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>YCSB For Pivotal Cloud Foundry</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/ycsb.css}" />
+</head>
+<body>
+    <div class="container">
+      <div class="masthead">
+        <h3 class="text-muted">YCSB For Pivotal Cloud Foundry</h3>
+        <nav>
+          <ul class="nav nav-justified">
+            <li th:class="${isConfig}? active : inactive" class="active"><a href="/">Configure</a></li>
+            <li th:class="${isConfig}? inactive : active" class="active"><a href="/results">Results</a></li>
+          </ul>
+        </nav>
+      </div>
+      
+      <br/>
+
+      <div th:if="${error}">
+         <div class="alert alert-danger alert-dismissible" role="alert">
+             <strong>Error!</strong><span th:text="${error}"></span>
+           </div>
+      </div>
+      
+      <div th:unless="${bound}" class="row">
+          <div class="container">
+            <h2 class="text-muted">No services bound</h2>
+          </div>
+      </div>
+      
+      <div th:if="${bound}" >
+	      <div class="row">
+	        <div class="col-lg-6">
+	          <h4>Step 1: Select a Database Service</h4>
+	          <select id="dbSelect" class="form-control">
+	              <option th:each="service : ${services}" th:value="${service}" th:text="${service}" th:selected="(${serviceNameA} == ${service})"></option>
+	          </select>       
+	        </div>
+	      </div>
+	      
+	      <div  class="row">
+	        <div class="col-lg-12">
+	          <h4>Step 2: Select a Workload</h4>
+	          <select id="workloadSelect" class="form-control">
+	              <option th:each="workload : ${workloads}" th:value="${workload.getResourcename()}" 
+	                      th:text="${workload.getName()}" th:selected="(${workloadConfig.getResourcename()} == ${workload.getResourcename()})" ></option>
+	          </select>
+		     </div>
+	      </div>
+
+       <h4>Step 3: Customize the Workload</h4>
+       <p>Modify workload parameters as required</p>
+	    	    
+		<form action="#" th:action="@{/}" th:object="${workloadConfig}" method="post" th:if="${workloadConfig}">		  
+		  <div class="form-group" th:classappend="${#fields.hasErrors('threadcount')}? has-error">
+		    <label>Number of Threads</label>
+		    <input type="text" class="form-control" th:field="*{threadcount}" />
+            <p th:if="${#fields.hasErrors('threadcount')}" th:errors="*{threadcount}" class="has-error"></p>
+		  </div>
+		  <div class="form-group" th:classappend="${#fields.hasErrors('fieldcount')}? has-error">
+            <label>Field Count</label>
+            <input type="text" class="form-control" th:field="*{fieldcount}" />
+            <p th:if="${#fields.hasErrors('fieldcount')}" th:errors="*{fieldcount}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('fieldlength')}? has-error">
+            <label>Field Length</label>
+            <input type="text" class="form-control" th:field="*{fieldlength}" />
+            <p th:if="${#fields.hasErrors('fieldlength')}" th:errors="*{fieldlength}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('operationcount')}? has-error">
+            <label>Operation Count</label>
+            <input type="text" class="form-control" th:field="*{operationcount}" />
+            <p th:if="${#fields.hasErrors('operationcount')}" th:errors="*{operationcount}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('recordcount')}? has-error">
+            <label>Record Count</label>
+            <input type="text" class="form-control" th:field="*{recordcount}" />
+            <p th:if="${#fields.hasErrors('recordcount')}" th:errors="*{recordcount}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('maxexecutiontime')}? has-error">
+            <label>Max Execution Time</label>
+            <input type="text" class="form-control" th:field="*{maxexecutiontime}" />
+            <p th:if="${#fields.hasErrors('maxexecutiontime')}" th:errors="*{maxexecutiontime}" class="has-error"></p>
+          </div>
+          <div class="checkbox">
+            <label>Read All Fields</label>
+            <input type="checkbox" th:field="*{readallfields}" />
+          </div>
+          <div class="checkbox">
+            <label>Write All Fields</label>
+            <input type="checkbox" th:field="*{writeallfields}" />
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('readproportion')}? has-error">
+            <label>Read Proportion</label>
+            <input type="text" class="form-control" th:field="*{readproportion}" />
+            <p th:if="${#fields.hasErrors('readproportion')}" th:errors="*{readproportion}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('updateproportion')}? has-error">
+            <label>Update Proportion</label>
+            <input type="text" class="form-control" th:field="*{updateproportion}" />
+            <p th:if="${#fields.hasErrors('updateproportion')}" th:errors="*{updateproportion}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('insertproportion')}? has-error">
+            <label>Insert Proportion</label>
+            <input type="text" class="form-control" th:field="*{insertproportion}" />
+            <p th:if="${#fields.hasErrors('insertproportion')}" th:errors="*{insertproportion}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('scanproportion')}? has-error">
+            <label>Scan Proportion</label>
+            <input type="text" class="form-control" th:field="*{scanproportion}" />
+            <p th:if="${#fields.hasErrors('scanproportion')}" th:errors="*{scanproportion}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('readmodifywriteproportion')}? has-error">
+            <label>Read/Modify/Write Proportion</label>
+            <input type="text" class="form-control" th:field="*{readmodifywriteproportion}" />
+            <p th:if="${#fields.hasErrors('readmodifywriteproportion')}" th:errors="*{readmodifywriteproportion}" class="has-error"></p>
+          </div>
+          <div class="form-group">
+            <label>Request Distribution</label>
+            <select class="form-control" th:field="*{requestdistribution}">
+			   <option th:each="distribution : ${T(com.aerospike.util.WorkloadConfig.RequestDist).values()}"
+			          th:value="${distribution}" th:text="${distribution}" >
+			   </option>
+			</select>
+          </div>
+          <div class="form-group">
+            <label>Max Scan Length</label>
+            <input type="text" class="form-control" th:field="*{maxscanlength}" />
+          </div>
+          <div class="form-group">
+            <label>Scan Length Distribution</label>
+            <select class="form-control" th:field="*{scanlenthdistribution}">
+			   <option th:each="scanlengthdist : ${T(com.aerospike.util.WorkloadConfig.ScanLengthDist).values()}"
+			          th:value="${scanlengthdist}" th:text="${scanlengthdist}" >
+			   </option>
+			</select>
+          </div>
+          <div class="form-group">
+            <label>Insert Order</label>
+            <select class="form-control" th:field="*{insertorder}">
+			   <option th:each="insertorder : ${T(com.aerospike.util.WorkloadConfig.InsertOrder).values()}"
+			          th:value="${insertorder}" th:text="${insertorder}" >
+			   </option>
+			</select>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('hotspotdatafraction')}? has-error">
+            <label>Hot Spot Data Fraction</label>
+            <input type="text" class="form-control" th:field="*{hotspotdatafraction}" />
+            <p th:if="${#fields.hasErrors('hotspotdatafraction')}" th:errors="*{hotspotdatafraction}" class="has-error"></p>
+          </div>
+          <div class="form-group" th:classappend="${#fields.hasErrors('hotspotopnfraction')}? has-error">
+            <label>Hot Spot Operation Fraction</label>
+            <input type="number" class="form-control" th:field="*{hotspotopnfraction}" />
+            <p th:if="${#fields.hasErrors('hotspotopnfraction')}" th:errors="*{hotspotopnfraction}" class="has-error"></p>
+          </div>
+          
+          <input type="hidden" class="form-control" th:field="*{workload}" />
+          <input type="hidden" class="form-control" th:field="*{name}" />
+          <input type="hidden" class="form-control" th:field="*{resourcename}" />
+          <h4>Step 4: Load Data or Run Benchmark</h4>
+          <p>Load Data will load recordcount records into the DB</p>
+          <p>Run Benchmark will run the configured operations on the DB</p>
+	      <button id="load" type="submit" class="btn btn-primary" name="action" value="load">Load Data</button>
+	      <button id="run" type="submit" class="btn btn-primary" name="action" value="run">Run Benchmark</button>       
+		</form>
+      </div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+      $("#load").click(function() {
+    	  $("html").addClass("loading");
+    	});
+      $("#run").click(function() {
+    	  $("html").addClass("loading");
+        });
+      $( "#workloadSelect" ).change(function () {
+    	 window.location.href = "/workload?name=" + this.value;
+      });
+      $( "#dbSelect" ).change(function () {
+     	 window.location.href = "/serviceA?name=" + this.value;
+       });
+      
+    </script>
+</body>
+</html>

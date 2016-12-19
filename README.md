@@ -10,15 +10,15 @@ This is a [YCSB](https://github.com/brianfrankcooper/YCSB) web application that 
 
 ### Building
 
-   $ git submodule update --init
-   $ gradle configureYCSB
-   $ gradle assemble
+    $ git submodule update --init
+    $ gradle configureYCSB
+    $ gradle assemble
 
 ### Deploy to PCF
 
-   $ cf push ycsb -p build/libs/ycsb-web-0.0.9-SNAPSHOT.jar
+    $ cf push ycsb -p build/libs/ycsb-web-0.0.9-SNAPSHOT.jar
 
-*Note:* Use current build version for ycsb-web jar file.
+**Note:** Use current build version for ycsb-web jar file.
 
 ## Extending
 
